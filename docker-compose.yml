@@ -1,0 +1,13 @@
+version: "3.8"
+services:
+  web:
+    build: .
+    image: yourusername/psusphere-app:latest
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./projectsite:/app  # Maps your local code to the container for live updates
+    environment:
+      - DEBUG=1
+      - USE_SQLITE=true
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]

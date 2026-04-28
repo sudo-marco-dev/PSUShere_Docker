@@ -1,0 +1,290 @@
+{% load socialaccount %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PSUSphere &mdash; Login</title>
+
+  <!-- MDB UI Kit v6.4.2 -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css"/>
+  <!-- Font Awesome v6.5.0 -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1a237e 0%, #0d47a1 50%, #1565c0 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 600px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      margin: 2rem;
+    }
+
+    .auth-card-header {
+      background: linear-gradient(135deg, #1a237e, #0d47a1);
+      padding: 2rem;
+      text-align: center;
+      color: white;
+    }
+
+    .auth-card-header .logo-icon {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .auth-card-header h4 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: 1px;
+    }
+
+    .auth-card-body {
+      padding: 2rem;
+    }
+
+    .nav-pills .nav-link {
+      color: #0d47a1;
+      font-weight: 600;
+      border-radius: 8px;
+    }
+
+    .nav-pills .nav-link.active {
+      background-color: #0d47a1;
+      color: #fff;
+    }
+
+    .btn-google {
+      background-color: #fff;
+      border: 1px solid #dadce0;
+      color: #3c4043;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+
+    .btn-google:hover {
+      background-color: #f8f9fa;
+      border-color: #c6c6c6;
+      color: #3c4043;
+    }
+
+    .divider-text {
+      text-align: center;
+      position: relative;
+      margin: 1.25rem 0;
+      color: #6c757d;
+      font-size: 0.875rem;
+    }
+
+    .divider-text::before,
+    .divider-text::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 42%;
+      height: 1px;
+      background: #dee2e6;
+    }
+
+    .divider-text::before { left: 0; }
+    .divider-text::after  { right: 0; }
+  </style>
+</head>
+<body>
+
+<div class="auth-card">
+  <!-- Card Header -->
+  <div class="auth-card-header">
+    <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+    <h4>PSUSphere</h4>
+    <p class="mb-0 mt-1 opacity-75">Pangasinan State University</p>
+  </div>
+
+  <!-- Card Body -->
+  <div class="auth-card-body">
+
+    <!-- Nav Pills -->
+    <ul class="nav nav-pills nav-justified mb-4" id="authTab" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="login-tab"
+                data-mdb-pill-init
+                data-mdb-target="#loginPane"
+                type="button" role="tab"
+                aria-controls="loginPane" aria-selected="true">
+          <i class="fas fa-sign-in-alt me-1"></i> Login
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="register-tab"
+                data-mdb-pill-init
+                data-mdb-target="#registerPane"
+                type="button" role="tab"
+                aria-controls="registerPane" aria-selected="false">
+          <i class="fas fa-user-plus me-1"></i> Register
+        </button>
+      </li>
+    </ul>
+
+    <div class="tab-content" id="authTabContent">
+
+      <!-- ===== LOGIN PANE ===== -->
+      <div class="tab-pane fade show active" id="loginPane" role="tabpanel" aria-labelledby="login-tab">
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {% for error in form.non_field_errors %}
+              <span>{{ error }}</span>
+            {% endfor %}
+            <button type="button" class="btn-close" data-mdb-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endif %}
+
+        <!-- Google Login -->
+        <a href="{% provider_login_url 'google' %}" class="btn btn-google w-100 mb-3 d-flex align-items-center justify-content-center gap-2">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+               alt="Google" width="20" height="20"/>
+          Continue with Google
+        </a>
+
+        <div class="divider-text">or sign in with email</div>
+
+        <form method="POST" action="{% url 'account_login' %}">
+          {% csrf_token %}
+
+          <!-- Email / Username -->
+          <div class="form-outline mb-3">
+            <input type="text"
+                   id="id_login"
+                   name="login"
+                   class="form-control"
+                   value="{{ form.login.value|default:'' }}"
+                   required />
+            <label class="form-label" for="id_login">
+              <i class="fas fa-envelope me-1 text-primary"></i> Email or Username
+            </label>
+          </div>
+
+          <!-- Password -->
+          <div class="form-outline mb-3">
+            <input type="password"
+                   id="id_password"
+                   name="password"
+                   class="form-control"
+                   required />
+            <label class="form-label" for="id_password">
+              <i class="fas fa-lock me-1 text-primary"></i> Password
+            </label>
+          </div>
+
+          <!-- Remember me + Forgot password -->
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox"
+                     name="remember" id="id_remember" />
+              <label class="form-check-label" for="id_remember">Remember me</label>
+            </div>
+            <a href="{% url 'account_reset_password' %}" class="text-primary text-decoration-none small">
+              Forgot password?
+            </a>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 mb-2">
+            <i class="fas fa-sign-in-alt me-1"></i> Sign In
+          </button>
+        </form>
+
+      </div><!-- /loginPane -->
+
+      <!-- ===== REGISTER PANE ===== -->
+      <div class="tab-pane fade" id="registerPane" role="tabpanel" aria-labelledby="register-tab">
+
+        <!-- Google Sign-up -->
+        <a href="{% provider_login_url 'google' %}" class="btn btn-google w-100 mb-3 d-flex align-items-center justify-content-center gap-2">
+          <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+               alt="Google" width="20" height="20"/>
+          Sign up with Google
+        </a>
+
+        <div class="divider-text">or register with email</div>
+
+        <form method="POST" action="{% url 'account_signup' %}">
+          {% csrf_token %}
+
+          <!-- Username -->
+          <div class="form-outline mb-3">
+            <input type="text"
+                   id="reg_username"
+                   name="username"
+                   class="form-control"
+                   required />
+            <label class="form-label" for="reg_username">
+              <i class="fas fa-user me-1 text-primary"></i> Username
+            </label>
+          </div>
+
+          <!-- Email -->
+          <div class="form-outline mb-3">
+            <input type="email"
+                   id="reg_email"
+                   name="email"
+                   class="form-control"
+                   required />
+            <label class="form-label" for="reg_email">
+              <i class="fas fa-envelope me-1 text-primary"></i> Email Address
+            </label>
+          </div>
+
+          <!-- Password -->
+          <div class="form-outline mb-3">
+            <input type="password"
+                   id="reg_password1"
+                   name="password1"
+                   class="form-control"
+                   required />
+            <label class="form-label" for="reg_password1">
+              <i class="fas fa-lock me-1 text-primary"></i> Password
+            </label>
+          </div>
+
+          <!-- Confirm Password -->
+          <div class="form-outline mb-4">
+            <input type="password"
+                   id="reg_password2"
+                   name="password2"
+                   class="form-control"
+                   required />
+            <label class="form-label" for="reg_password2">
+              <i class="fas fa-lock me-1 text-primary"></i> Confirm Password
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100">
+            <i class="fas fa-user-plus me-1"></i> Create Account
+          </button>
+        </form>
+
+      </div><!-- /registerPane -->
+
+    </div><!-- /tab-content -->
+  </div><!-- /auth-card-body -->
+</div><!-- /auth-card -->
+
+<!-- MDB UI Kit JS v6.4.2 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.umd.min.js"></script>
+
+</body>
+</html>

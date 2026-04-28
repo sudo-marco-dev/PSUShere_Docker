@@ -1,0 +1,109 @@
+{% load i18n %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PSUSphere &mdash; Confirm Sign In</title>
+
+  <!-- MDB UI Kit v6.4.2 -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css"/>
+  <!-- Font Awesome v6.5.0 -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1a237e 0%, #0d47a1 50%, #1565c0 100%);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 500px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      margin: 2rem;
+    }
+
+    .auth-card-header {
+      background: linear-gradient(135deg, #1a237e, #0d47a1);
+      padding: 2rem;
+      text-align: center;
+      color: white;
+    }
+
+    .auth-card-header .logo-icon {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .auth-card-header h4 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+      letter-spacing: 1px;
+    }
+
+    .auth-card-body {
+      padding: 2rem;
+    }
+
+    .provider-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: #0d47a1;
+    }
+  </style>
+</head>
+<body>
+
+<div class="auth-card">
+  <!-- Card Header -->
+  <div class="auth-card-header">
+    <div class="logo-icon"><i class="fas fa-graduation-cap"></i></div>
+    <h4>PSUSphere</h4>
+    <p class="mb-0 mt-1 opacity-75">Pangasinan State University</p>
+  </div>
+
+  <!-- Card Body -->
+  <div class="auth-card-body text-center">
+
+    <div class="provider-icon">
+      <i class="fab fa-google"></i>
+    </div>
+
+    <h5 class="fw-bold mb-3">Confirm Sign In</h5>
+
+    <p class="text-muted mb-4">
+      You are about to sign in using your
+      <strong>{{ provider.name }}</strong> account.
+    </p>
+
+    <form method="POST" action="{{ request.path }}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary w-100 mb-3">
+        <i class="fas fa-check-circle me-2"></i> Continue with {{ provider.name }}
+      </button>
+    </form>
+
+    <a href="{% url 'account_login' %}" class="btn btn-outline-secondary w-100">
+      <i class="fas fa-arrow-left me-2"></i> Cancel
+    </a>
+
+  </div><!-- /auth-card-body -->
+</div><!-- /auth-card -->
+
+<!-- MDB UI Kit JS v6.4.2 -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.umd.min.js"></script>
+
+</body>
+</html>
